@@ -1,4 +1,5 @@
 import type { CleanableCollection } from './database';
+
 /** Register collections and their dependent collections here. */
 export const COLLECTIONS = {
   visits: {
