@@ -1,0 +1,10 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+const file = resolve(process.cwd(), '.env');
+if (existsSync(file)) process.loadEnvFile(file);
+const { MONGO_HOST, MONGO_PORT, MONGO_DATABASE, MONGO_USER, MONGO_PASSWORD } = process.env;
+if (!MONGO_HOST || !MONGO_PORT || !MONGO_DATABASE) throw new Error('Missing MONGO_HOST, MONGO_PORT or MONGO_DATABASE');
+if (Boolean(MONGO_USER) !== Boolean(MONGO_PASSWORD)) throw new Error('MONGO_USER and MONGO_PASSWORD must both be configured');
+const credentials = MONGO_USER && MONGO_PASSWORD ? `${encodeURIComponent(MONGO_USER)}:${encodeURIComponent(MONGO_PASSWORD)}@` : '';
+export const MONGO_URI = `mongodb://${credentials}${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?authSource=${MONGO_DATABASE}`;
+export const DATABASE_NAME = MONGO_DATABASE;
